@@ -1,0 +1,81 @@
+"^MASVSetPTN,[pattern]^" 
+"^SVMASetPTN,[ACKOK|ACKNG]^"
+^MASVSetPTN,Black^
+^SVMASetPTN,ACKOK^
+^MASVSignalOff^
+^SVMASignalOff,ACKOK^
+^MASVPcToolVer,1.1.2.178^
+^SVMAPcToolVer,ACKOK^
+T392B3C2NF18  #WE01020820191U4M0230#C402#9832039980#9832059680#0301#0500#A001#CLUSTER              #00=
+T392B3C2NF18  #WE01020820190V4M0230#C402#9837720980#9837721380#0401#0701#A001#EMF  -DGT10C2-CEM    #00=
+T392B3C2NF18  #WE0102082019234M0230#C402#9839876280#9839877180#0401#0701#0207#A001#EMF  -DGT10C2-CEM    #00=
+T392B3C2NF18  #WE01020820190X4M0230#C402#9838911880#9838912280#0401#0701#0103#A001#EMF  -DGT12C2-CEM    #00=
+T392B3C2NF18  #WE0102082019014M0230#C402#9839234880#9841618780#0500#0800#FFFF#A001#EMF  -PUP10-CEM      #00=
+T392B3C2NF18  #WE0102082019234M0230#C402#9839876280#9839877180#0301#0701#0103#A001#EMF  -DGT10C2-CEM    #00=
+T392B3C2NF18  #WE0102082019084M0230#C402#9833574380#9834362680#0301#0701#0108#A001#EMF  -EDGE-CEM       #00=
+T392B3C2NF18  #WE0102082019014M0230#C402#9839877180#9841618780#0301#0701#0207#A001#EMF  -PUP10-CEM      #00=
+
+?ssid=0lVnpuL&fid=0lVnpuL&path=%2F&filename={filename}&openfolder=normal&ep=
+
+Lot3.py
+Add PowerOff 
+
+staticparameter.py
+
+Black Box
+test case
+Add exit code
+58020000F0
+
+    if (((ReadBuf[IND_CMDSN] & CMD_MSK) == DT_STD_RECV_RESP)                        //check if it is response packet
+        && ((ReadBuf[IND_CMDSN] & SN_MSK) == (Msg[IND_CMDSN] & SN_MSK))     //check the SN is match
+        && (ReadBuf[IND_CRC] == CalChecksum(ReadBuf,DATA_LENGTH_7)))            //check the checksum is correct
+    {
+        U8 i;
+        U8 MsgLen=ReadBuf[IND_SIZE];
+        U8 Idx=0;
+        for(i=1;i<=MsgLen && Idx <rtndataLength;i++, Idx++)
+        {
+            rtndata[Idx]=ReadBuf[IND_SIZE+i];
+        }
+        return XPENG_OK;
+    }
+    
+How to call to lot3.py    
+Add templete of test case
+Get all class by namespace
+https://www.codegrepper.com/code-examples/csharp/c%23+Get+all+class+by+namespace
+Get method by class
+https://docs.microsoft.com/en-us/dotnet/api/system.type.getmethods?view=net-5.0
+
+import matplotlib.pyplot as plt
+import numpy as np
+with open("fuzzyout.dat") as f:
+    data = f.read()
+
+data = data.split('\n')
+data = [x for x in data if x != '']
+input = [float(row.split('\t')[0]) for row in data]
+ref = [float(row.split('\t')[1]) for row in data]
+output = [float(row.split('\t')[2]) for row in data]
+x = list(range(0, len(ref)))
+fig = plt.figure()
+
+ax1 = fig.add_subplot(111)
+
+ax1.set_title("Plot title")    
+ax1.set_xlabel('time')
+ax1.set_ylabel('output')
+
+ax1.plot(x,input, c='y', label='input')
+ax1.plot(x,output, c='b', label='output')
+ax1.plot(x,ref, c='r', label='Reference')
+
+leg = ax1.legend()
+
+plt.show()
+
+
+
+
+
