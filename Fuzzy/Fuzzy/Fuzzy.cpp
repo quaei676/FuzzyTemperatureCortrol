@@ -16,8 +16,8 @@ struct RuleStruct
 };
 struct RuleContentStruct
 {
-    double m;
     double sigma;
+    double m;
 };
 struct RuleOutputStruct
 {
@@ -28,29 +28,29 @@ struct RuleOutputStruct
 
 RuleStruct rules[] = { {1,4,1} ,{ 2,2,2 } ,{ 2,3,2 } ,{ 2,4,2 } ,{ 3,5,5 } ,{ 3,4,4 } ,{ 3,3,3 } ,
 { 3,2,2 } ,{ 3,1,1 },{ 4,5,5 } ,{ 4,4,4 } ,{ 4,3,4 } ,{ 4,2,4 }, { 5,5,5 } ,{ 5,4,5 } ,{ 5,3,4 } };
-double gaussianmf(double x, double m, double sigma)
+double gaussianmf(double x, RuleContentStruct output)
 {
     double ua;
-    ua = exp(-1 * pow(((x - m) / sigma), 2));
+    ua = exp(-1 * pow(((x - output.m) / output.sigma), 2));
     return ua;
 }
 
 class fuzzy {
     RuleOutputStruct ms[output_num];
 public:
-    void addmf(int opt, int, int, double sigma, double m);
+    void addmf(int opt, int rules_num, RuleContentStruct data);
     double eval(double e, double ce);
 };
-void fuzzy::addmf(int opt, int opt_num, int rules_num, double sigma, double m)
+void fuzzy::addmf(int opt, int rules_num, RuleContentStruct data)
 {
     switch (opt)
     {
     case 1:
-        ms[rules_num - 1].x = { m,sigma };
+        ms[rules_num - 1].x = data;
     case 2:
-        ms[rules_num - 1].y = { m,sigma };
+        ms[rules_num - 1].y = data;
     case 3:
-        ms[rules_num - 1].z = { m,sigma };
+        ms[rules_num - 1].z = data;
     }
 }
 double fuzzy::eval(double e, double ce)
@@ -63,9 +63,9 @@ double fuzzy::eval(double e, double ce)
     {
         rule_e = rules[i].rule_e - 1;
         rule_ce = rules[i].rule_ce - 1;
-        phi[i] = gaussianmf(e, ms[rule_e].x.m, ms[rule_e].x.sigma);
-        if (phi[i] > gaussianmf(ce, ms[rule_ce].y.m, ms[rule_ce].y.sigma))
-            phi[i] = gaussianmf(ce, ms[rule_ce].y.m, ms[rule_ce].y.sigma);
+        phi[i] = gaussianmf(e, ms[rule_e].x);
+        if (phi[i] > gaussianmf(ce, ms[rule_ce].y))
+            phi[i] = gaussianmf(ce, ms[rule_ce].y);
         sumphi += phi[i];
     }
 
@@ -83,23 +83,23 @@ double fuzzy::eval(double e, double ce)
 int main() 
 {
     FILE *fr;
-    double sigma = 0.15, sigma_1 = 0.1;
+    double sigma = 0.25, sigma_1 = 0.1;
     fuzzy fuzzy_1;
-    fuzzy_1.addmf(1, 1, 1, sigma, -1.0);
-    fuzzy_1.addmf(1, 1, 2, sigma, -0.5);
-    fuzzy_1.addmf(1, 1, 3, sigma, 0);
-    fuzzy_1.addmf(1, 1, 4, sigma, 0.5);
-    fuzzy_1.addmf(1, 1, 5, sigma, 1.0);
-    fuzzy_1.addmf(1, 2, 1, sigma, -1.0);
-    fuzzy_1.addmf(1, 2, 2, sigma, -0.5);
-    fuzzy_1.addmf(1, 2, 3, sigma, 0);
-    fuzzy_1.addmf(1, 2, 4, sigma, 0.5);
-    fuzzy_1.addmf(1, 2, 5, sigma, 1.0);
-    fuzzy_1.addmf(2, 1, 1, sigma, -1.0);
-    fuzzy_1.addmf(2, 1, 2, sigma, -0.5);
-    fuzzy_1.addmf(2, 1, 3, sigma, 0);
-    fuzzy_1.addmf(2, 1, 4, sigma, 0.5);
-    fuzzy_1.addmf(2, 1, 5, sigma, 1.0);
+    fuzzy_1.addmf(1, 1, { sigma, -1.0 });
+    fuzzy_1.addmf(1, 2, { sigma, -0.5 });
+    fuzzy_1.addmf(1, 3, { sigma, 0 });
+    fuzzy_1.addmf(1, 4, { sigma, 0.5 });
+    fuzzy_1.addmf(1, 5, { sigma, 1.0 });
+    fuzzy_1.addmf(2, 1, { sigma, -1.0 });
+    fuzzy_1.addmf(2, 2, { sigma, -0.5 });
+    fuzzy_1.addmf(2, 3, { sigma, 0 });
+    fuzzy_1.addmf(2, 4, { sigma, 0.5 });
+    fuzzy_1.addmf(2, 5, { sigma, 1.0 });
+    fuzzy_1.addmf(3, 1, { sigma, -1.0 });
+    fuzzy_1.addmf(3, 2, { sigma, -0.5 });
+    fuzzy_1.addmf(3, 3, { sigma, 0 });
+    fuzzy_1.addmf(3, 4, { sigma, 0.5 });
+    fuzzy_1.addmf(3, 5, { sigma, 1.0 });
     int Ts = 25, i;
     double p = 1.00151*pow(10, -4), q = 8.67973*pow(10, -3), y0 = 25, r = 40., y[180], a = exp(-p * Ts), b = (q / p)*(1 - exp(-p * Ts));
     double GE = (1. / 15.), GC = 1. / 15., GU = 250.;
